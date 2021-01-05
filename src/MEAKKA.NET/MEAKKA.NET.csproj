@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Adapters\" />
+    <Folder Include="Attributes\" />
   </ItemGroup>
 
 </Project>

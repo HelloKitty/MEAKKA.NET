@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Common.Logging;
 
@@ -11,10 +12,13 @@ namespace GladMMO
 	/// </summary>
 	/// <typeparam name="TActorStateType"></typeparam>
 	/// <typeparam name="TChildActorType"></typeparam>
-	public abstract class BaseEntityActor<TChildActorType, TActorStateType> : Akka.Actor.UntypedActor, IEntityActor, IEntityActorStateInitializable<TActorStateType>
-		where TActorStateType : class, IEntityActorStateContainable
+	public abstract class BaseEntityActor<TChildActorType, TActorStateType> : ReceiveActor, IEntityActor, IEntityActorStateInitializable<TActorStateType>
+		where TActorStateType : class
 		where TChildActorType : BaseEntityActor<TChildActorType, TActorStateType>
 	{
+		/// <summary>
+		/// Internal locking object.
+		/// </summary>
 		private readonly object SyncObj = new object();
 
 		/// <summary>
@@ -22,65 +26,86 @@ namespace GladMMO
 		/// </summary>
 		protected TActorStateType ActorState { get; private set; }
 
-		private IEntityActorMessageRouteable<TChildActorType, TActorStateType> MessageRouter { get; }
-
+		/// <summary>
+		/// Internal Common.Logging actor logger. <see cref="ILog"/>
+		/// </summary>
 		protected ILog Logger { get; }
 
+		/// <summary>
+		/// Indicates if the actor is initialized.
+		/// </summary>
 		public bool isInitialized { get; private set; } = false;
 
-		protected BaseEntityActor(IEntityActorMessageRouteable<TChildActorType, TActorStateType> messageRouter, ILog logger)
+		protected BaseEntityActor(ILog logger)
 		{
-			MessageRouter = messageRouter ?? throw new ArgumentNullException(nameof(messageRouter));
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			ReceiveAsync<EntityActorMessage>(OnInternalReceiveMessageAsync);
 		}
 
-		protected sealed override void OnReceive(object message)
+		protected async Task OnInternalReceiveMessageAsync(EntityActorMessage message)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
-			if (!isInitialized)
+			if(!isInitialized)
 			{
-				if (ExtractPotentialStateMessage(message, out var initMessage))
+				//Only 1 thread ever will call OnInternalReceiveMessageAsync but it prevents
+				//any external initialization from happening.
+				lock(SyncObj)
 				{
-					InitializeState(initMessage.State);
+					if(!isInitialized)
+					{
+						if(ExtractPotentialStateMessage(message, out var initMessage))
+						{
+							InitializeState(initMessage.State);
 
-					//Send successful initialization message to the entity, immediately.
-					//Some entities may not care.
-					TrySendMessage(new EntityActorInitializationSuccessMessage());
-				}
-				else
-				{
-					if(Logger.IsWarnEnabled)
-						Logger.Warn($"{GetType().Name} encountered MessageType: {message.GetType().Name} before INITIALIZATION.");
-				}
+							//Send successful initialization message to the entity, immediately.
+							//Some entities may not care.
+							OnInitialized(new EntityActorInitializationSuccessMessage());
+						}
+						else
+						{
+							if(Logger.IsWarnEnabled)
+								Logger.Warn($"{GetType().Name} encountered MessageType: {message.GetType().Name} before INITIALIZATION.");
+						}
 
-				//Even if we're initialized now, it's an init message we shouldn't continue with.
-				return;
+						//Even if we're initialized now, it's an init message we shouldn't continue with.
+						return;
+					}
+				}
 			}
+
+			//TODO: Pool or cache somehow.
+			EntityActorMessageContext context = new EntityActorMessageContext(Sender, Self, Context.System.Scheduler);
 
 			try
 			{
-				if(!TrySendMessage(message))
+				if(!await OnReceiveMessageAsync(message, context))
 					if(Logger.IsWarnEnabled)
 						Logger.Warn($"EntityActor encountered unhandled MessageType: {message.GetType().Name}");
 			}
-			catch (Exception e)
+			catch(Exception e)
 			{
 				if(Logger.IsErrorEnabled)
-					Logger.Error($"Actor: {ActorState.EntityGuid} failed to handle MessageType: {message.GetType().Name} without Exception: {e.Message}\n\nStack: {e.StackTrace}");
+					Logger.Error($"Actor: {Self.Path.Address} failed to handle MessageType: {message.GetType().Name} without Exception: {e.Message}\n\nStack: {e.StackTrace}");
 				throw;
 			}
 		}
 
-		private bool TrySendMessage(object message)
-		{
-			EntityActorMessage castedMessage = (EntityActorMessage)message;
-			EntityActorMessageContext context = new EntityActorMessageContext(Sender, Self, Context.System.Scheduler);
+		/// <summary>
+		/// Implements must override this and implement domain-specific message handling logic.
+		/// </summary>
+		/// <param name="message">The message to handle.</param>
+		/// <param name="context">The actor message context.</param>
+		/// <returns>True if the message was successfully handled.</returns>
+		protected abstract Task<bool> OnReceiveMessageAsync(EntityActorMessage message, EntityActorMessageContext context);
 
-			return MessageRouter.RouteMessage(context, ActorState, castedMessage);
-		}
-
-		protected virtual bool ExtractPotentialStateMessage(object message, out EntityActorStateInitializeMessage<TActorStateType> entityActorStateInitializeMessage)
+		/// <summary>
+		/// Implementer can override the behavior of extracting the state from the provided initialization message.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="entityActorStateInitializeMessage"></param>
+		/// <returns></returns>
+		protected virtual bool ExtractPotentialStateMessage(EntityActorMessage message, out EntityActorStateInitializeMessage<TActorStateType> entityActorStateInitializeMessage)
 		{
 			if (message is EntityActorStateInitializeMessage<TActorStateType> initMessage)
 			{
@@ -92,7 +117,11 @@ namespace GladMMO
 			return false;
 		}
 
-		protected virtual void OnInitialized()
+		/// <summary>
+		/// Implementer can override this to preform post-initialization logic.
+		/// </summary>
+		/// <param name="successMessage">The success entity initialization message.</param>
+		protected virtual void OnInitialized(EntityActorInitializationSuccessMessage successMessage)
 		{
 
 		}
@@ -107,10 +136,13 @@ namespace GladMMO
 
 				ActorState = state;
 				isInitialized = true;
-				OnInitialized();
 			}
 		}
 
+		/// <summary>
+		/// Default's to <see cref="OneForOneStrategy"/> which stops the Actor on exception.
+		/// </summary>
+		/// <returns></returns>
 		protected override SupervisorStrategy SupervisorStrategy()
 		{
 			return new OneForOneStrategy(0, -1, exception =>
