@@ -4,10 +4,24 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <RootNamespace>MEAKKA</RootNamespace>
+    <Authors>Andrew Blakely, Glader</Authors>
+    <Product>MEAKKA.NET</Product>
+    <Description>Strongly-typed message-based Entity Actor AKKA.NET library.</Description>
+    <Copyright>Andrew Blakely</Copyright>
+    <PackageProjectUrl>https://github.com/HelloKitty/MEAKKA.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HelloKitty/MEAKKA.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>ME AKKA MEAKKA MEAKKA.NET</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.4.14" />
     <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
