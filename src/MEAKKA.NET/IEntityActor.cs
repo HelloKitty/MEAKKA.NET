@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// Marker interface for entity actor types.

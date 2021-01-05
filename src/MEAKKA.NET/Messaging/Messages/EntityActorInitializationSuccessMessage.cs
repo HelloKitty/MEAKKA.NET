@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// Empty message that indicates an Entity actor's state has been successfully initialized.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	public interface IEntityActorStateInitializable<in TActorStateType>
 	{

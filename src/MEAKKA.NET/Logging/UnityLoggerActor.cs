@@ -5,7 +5,7 @@ using Akka.Actor;
 using Akka.Event;
 using Common.Logging;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	public sealed class UnityLoggerActor : ReceiveActor, ILogReceive
 	{

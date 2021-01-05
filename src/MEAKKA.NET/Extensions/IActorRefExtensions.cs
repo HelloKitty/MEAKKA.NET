@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Akka.Actor;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	public static class IActorRefExtensions
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// Base actor message type.

@@ -4,7 +4,7 @@ using System.Text;
 using Akka.Event;
 using Common.Logging;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// AKKA.NET <see cref="LoggingAdapterBase"/> implementation of a Logger around <see cref="ILog"/> implementation.

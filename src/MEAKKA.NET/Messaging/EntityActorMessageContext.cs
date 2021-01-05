@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Akka.Actor;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// The context of the entity actor message sent.

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Common.Logging;
 
-namespace GladMMO
+namespace MEAKKA
 {
 	/// <summary>
 	/// Base Akka actor type for Entities in GladMMO.
