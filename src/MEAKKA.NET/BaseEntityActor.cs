@@ -11,10 +11,8 @@ namespace GladMMO
 	/// Base Akka actor type for Entities in GladMMO.
 	/// </summary>
 	/// <typeparam name="TActorStateType"></typeparam>
-	/// <typeparam name="TChildActorType"></typeparam>
-	public abstract class BaseEntityActor<TChildActorType, TActorStateType> : ReceiveActor, IEntityActor, IEntityActorStateInitializable<TActorStateType>
+	public abstract class BaseEntityActor<TActorStateType> : ReceiveActor, IEntityActor, IEntityActorStateInitializable<TActorStateType>
 		where TActorStateType : class
-		where TChildActorType : BaseEntityActor<TChildActorType, TActorStateType>
 	{
 		/// <summary>
 		/// Internal locking object.
