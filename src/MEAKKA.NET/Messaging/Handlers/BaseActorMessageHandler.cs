@@ -13,6 +13,7 @@ namespace MEAKKA
 	public abstract class BaseActorMessageHandler<TMessageType> : BaseSpecificMessageHandler<TMessageType, EntityActorMessage, EntityActorMessageContext> 
 		where TMessageType : EntityActorMessage
 	{
+		//TODO: Move this to Glader Essentials handler API
 		/// <summary>
 		/// Indicates the message type this handles.
 		/// </summary>

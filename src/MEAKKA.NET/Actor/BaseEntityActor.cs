@@ -36,6 +36,9 @@ namespace MEAKKA
 		/// </summary>
 		public bool isInitialized { get; private set; } = false;
 
+		/// <summary>
+		/// The message handler service for the actor.
+		/// </summary>
 		protected IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> MessageHandlerService { get; }
 
 		protected BaseEntityActor(ILog logger, IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> messageHandlerService)
