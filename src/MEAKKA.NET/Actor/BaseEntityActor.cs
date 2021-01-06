@@ -60,6 +60,9 @@ namespace MEAKKA
 			MessageHandlerService = messageHandlerService ?? throw new ArgumentNullException(nameof(messageHandlerService));
 
 			ReceiveAsync<EntityActorMessage>(OnReceiveMessageAsync);
+
+			//This allows us to handle dispose attachment messages.
+			Receive<AttachDisposableActorMessage>(message => AttachDisposable(message.Disposable));
 		}
 
 		protected async Task OnReceiveMessageAsync(EntityActorMessage message)
