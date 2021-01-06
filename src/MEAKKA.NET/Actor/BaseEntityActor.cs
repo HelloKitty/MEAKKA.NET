@@ -184,6 +184,15 @@ namespace MEAKKA
 			});
 		}
 
+		/// <inheritdoc />
+		protected override void PostStop()
+		{
+			base.PostStop();
+
+			//On stop we just need to dispose all disposable resources attached to this actor.
+			Dispose();
+		}
+
 		[Obsolete]
 		public static void InitializeActor(IActorRef actorReference, TActorStateType state)
 		{
