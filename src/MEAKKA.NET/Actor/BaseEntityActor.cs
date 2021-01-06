@@ -58,10 +58,11 @@ namespace MEAKKA
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			MessageHandlerService = messageHandlerService ?? throw new ArgumentNullException(nameof(messageHandlerService));
-			ReceiveAsync<EntityActorMessage>(OnInternalReceiveMessageAsync);
+
+			ReceiveAsync<EntityActorMessage>(OnReceiveMessageAsync);
 		}
 
-		protected async Task OnInternalReceiveMessageAsync(EntityActorMessage message)
+		protected async Task OnReceiveMessageAsync(EntityActorMessage message)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 
@@ -99,7 +100,7 @@ namespace MEAKKA
 
 			try
 			{
-				if(!await OnReceiveMessageAsync(message, context))
+				if(!await HandleMessageAsync(message, context))
 					if(Logger.IsWarnEnabled)
 						Logger.Warn($"EntityActor encountered unhandled MessageType: {message.GetType().Name}");
 			}
@@ -117,7 +118,7 @@ namespace MEAKKA
 		/// <param name="message">The message to handle.</param>
 		/// <param name="context">The actor message context.</param>
 		/// <returns>True if the message was successfully handled.</returns>
-		protected Task<bool> OnReceiveMessageAsync(EntityActorMessage message, EntityActorMessageContext context)
+		protected Task<bool> HandleMessageAsync(EntityActorMessage message, EntityActorMessageContext context)
 		{
 			if (message == null) throw new ArgumentNullException(nameof(message));
 			if (context == null) throw new ArgumentNullException(nameof(context));
