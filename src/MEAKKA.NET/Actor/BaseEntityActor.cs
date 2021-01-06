@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Common.Logging;
+using Glader.Essentials;
 
 namespace MEAKKA
 {
@@ -34,9 +36,12 @@ namespace MEAKKA
 		/// </summary>
 		public bool isInitialized { get; private set; } = false;
 
-		protected BaseEntityActor(ILog logger)
+		protected IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> MessageHandlerService { get; }
+
+		protected BaseEntityActor(ILog logger, IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> messageHandlerService)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			MessageHandlerService = messageHandlerService ?? throw new ArgumentNullException(nameof(messageHandlerService));
 			ReceiveAsync<EntityActorMessage>(OnInternalReceiveMessageAsync);
 		}
 
@@ -96,7 +101,13 @@ namespace MEAKKA
 		/// <param name="message">The message to handle.</param>
 		/// <param name="context">The actor message context.</param>
 		/// <returns>True if the message was successfully handled.</returns>
-		protected abstract Task<bool> OnReceiveMessageAsync(EntityActorMessage message, EntityActorMessageContext context);
+		protected Task<bool> OnReceiveMessageAsync(EntityActorMessage message, EntityActorMessageContext context)
+		{
+			if (message == null) throw new ArgumentNullException(nameof(message));
+			if (context == null) throw new ArgumentNullException(nameof(context));
+
+			return MessageHandlerService.HandleMessageAsync(context, message, CancellationToken.None);
+		}
 
 		/// <summary>
 		/// Implementer can override the behavior of extracting the state from the provided initialization message.
