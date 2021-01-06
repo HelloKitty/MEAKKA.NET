@@ -7,7 +7,7 @@ using Akka.Util;
 using Glader.Essentials;
 using MEAKKA;
 
-namespace Booma
+namespace MEAKKA
 {
 	/// <summary>
 	/// Default actor message handling strategy.

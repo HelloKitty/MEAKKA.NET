@@ -4,7 +4,7 @@ using System.Text;
 using Glader.Essentials;
 using MEAKKA;
 
-namespace Booma
+namespace MEAKKA
 {
 	/// <summary>
 	/// Base message handler for actors.

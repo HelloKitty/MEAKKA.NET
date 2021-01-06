@@ -6,7 +6,7 @@ using Akka.Actor;
 using Glader.Essentials;
 using MEAKKA;
 
-namespace Booma
+namespace MEAKKA
 {
 	/// <summary>
 	/// Marks a <see cref="IMessageHandler{TMessageType,TMessageContext}"/> as usable
