@@ -13,7 +13,11 @@ namespace MEAKKA
 	/// Base Akka actor type for Entities in GladMMO.
 	/// </summary>
 	/// <typeparam name="TActorStateType"></typeparam>
-	public abstract class BaseEntityActor<TActorStateType> : ReceiveActor, IEntityActorStateInitializable<TActorStateType>
+	public abstract class BaseEntityActor<TActorStateType> : 
+		ReceiveActor, 
+		IEntityActorStateInitializable<TActorStateType>,
+		IDisposableAttachable,
+		ISingleDisposable
 		where TActorStateType : class
 	{
 		/// <summary>
@@ -40,6 +44,15 @@ namespace MEAKKA
 		/// The message handler service for the actor.
 		/// </summary>
 		protected IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> MessageHandlerService { get; }
+
+		/// <summary>
+		/// Represents all the disposable dependencies of a <see cref="BaseEntityActor{TActorStateType}"/>.
+		/// This will be disposed when the session is disposed.
+		/// </summary>
+		private List<IDisposable> InternalDisposables { get; } = new List<IDisposable>();
+
+		/// <inheritdoc />
+		public bool isDisposed { get; private set; } = false;
 
 		protected BaseEntityActor(ILog logger, IMessageHandlerService<EntityActorMessage, EntityActorMessageContext> messageHandlerService)
 		{
@@ -167,12 +180,84 @@ namespace MEAKKA
 			});
 		}
 
+		[Obsolete]
 		public static void InitializeActor(IActorRef actorReference, TActorStateType state)
 		{
 			if (actorReference == null) throw new ArgumentNullException(nameof(actorReference));
 			if (state == null) throw new ArgumentNullException(nameof(state));
 
 			actorReference.Tell(new EntityActorStateInitializeMessage<TActorStateType>(state));
+		}
+
+		/// <inheritdoc />
+		public void AttachDisposable(IDisposable disposable)
+		{
+			if(disposable == null) throw new ArgumentNullException(nameof(disposable));
+
+			lock(SyncObj)
+			{
+				if(isDisposed)
+					throw new ObjectDisposedException($"Cannot attach {disposable.GetType().Name} as an attached disposable if the session is already disposed.");
+
+				InternalDisposables.Add(disposable);
+			}
+		}
+
+		//See: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose
+		/// <inheritdoc />
+		public void Dispose()
+		{
+			lock(SyncObj)
+			{
+				if(isDisposed)
+					return;
+
+				try
+				{
+					//Foreach but make sure to guard against exceptions
+					//caused by disposal because we need to dispose of ALL resources first or else we
+					//may leak.
+					Exception optionalException = null;
+					foreach(var disposable in InternalDisposables)
+						try
+						{
+							disposable.Dispose();
+						}
+						catch (Exception e)
+						{
+							if (Logger.IsErrorEnabled)
+								Logger.Error($"Failed to Dispose of Actor Owned Resource: {disposable?.GetType()?.Name} Error: {e}");
+
+							optionalException = e;
+						}
+
+					//We throw so we don't silently supress the error.
+					if (optionalException != null)
+						throw new InvalidOperationException($"Failed to dispose of all resources gracefully. See error log.", optionalException);
+				}
+				finally
+				{
+					isDisposed = true;
+
+					// Suppress finalization.
+					GC.SuppressFinalize(this);
+
+					// Dispose of unmanaged resources.
+					Dispose(true);
+				}
+			}
+		}
+
+		//See: https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose
+		/// <summary>
+		/// Implements can additionally dispose of resources.
+		/// This is called via <see cref="Dispose()"/> or the runtime finalizer.
+		/// Implementers should always call the base.
+		/// </summary>
+		/// <param name="disposing">indicates whether the method call comes from a Dispose method (its value is true) or from a finalizer (its value is false).</param>
+		protected virtual void Dispose(bool disposing)
+		{
+
 		}
 	}
 }
