@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EA72BFB0-A73
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MEAKKA.NET", "src\MEAKKA.NET\MEAKKA.NET.csproj", "{488904CC-84E4-4E47-814B-07A6241106F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEAKKA.NET.Autofac", "src\MEAKKA.NET.Autofac\MEAKKA.NET.Autofac.csproj", "{B36AA509-C8EE-4631-8B12-08E388AF451C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{488904CC-84E4-4E47-814B-07A6241106F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{488904CC-84E4-4E47-814B-07A6241106F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{488904CC-84E4-4E47-814B-07A6241106F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B36AA509-C8EE-4631-8B12-08E388AF451C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B36AA509-C8EE-4631-8B12-08E388AF451C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B36AA509-C8EE-4631-8B12-08E388AF451C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B36AA509-C8EE-4631-8B12-08E388AF451C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{488904CC-84E4-4E47-814B-07A6241106F3} = {EA72BFB0-A73D-47E3-BCB8-B34BF6A78C77}
+		{B36AA509-C8EE-4631-8B12-08E388AF451C} = {EA72BFB0-A73D-47E3-BCB8-B34BF6A78C77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {762757F6-B2A8-4990-B1DE-A6B137AC2CF9}
