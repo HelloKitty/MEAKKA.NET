@@ -13,20 +13,21 @@ namespace MEAKKA
 		/// <summary>
 		/// Actor that sent the corresponding <see cref="EntityActorMessage"/>.
 		/// </summary>
-		public IActorRef Sender { get; }
+		public IActorRef Sender => ActorContext.Sender;
 
 		/// <summary>
 		/// Actor that is receiving this message.
 		/// </summary>
-		public IActorRef Entity { get; }
+		public IActorRef Entity => ActorContext.Self;
 
-		public IScheduler ContinuationScheduler { get; }
+		/// <summary>
+		/// The complete actor message context.
+		/// </summary>
+		public IUntypedActorContext ActorContext { get; }
 
-		public EntityActorMessageContext(IActorRef sender, IActorRef entity, IScheduler continuationScheduler)
+		public EntityActorMessageContext(IUntypedActorContext actorContext)
 		{
-			Sender = sender ?? throw new ArgumentNullException(nameof(sender));
-			Entity = entity ?? throw new ArgumentNullException(nameof(entity));
-			ContinuationScheduler = continuationScheduler ?? throw new ArgumentNullException(nameof(continuationScheduler));
+			ActorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
 		}
 	}
 }

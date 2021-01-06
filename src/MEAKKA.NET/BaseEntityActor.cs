@@ -71,9 +71,10 @@ namespace MEAKKA
 					}
 				}
 			}
-
+			
+			//TODO: Is it safe to capture the Context message ref forever??
 			//TODO: Pool or cache somehow.
-			EntityActorMessageContext context = new EntityActorMessageContext(Sender, Self, Context.System.Scheduler);
+			EntityActorMessageContext context = new EntityActorMessageContext(Context);
 
 			try
 			{
