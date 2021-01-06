@@ -11,7 +11,7 @@ namespace MEAKKA
 	/// Base Akka actor type for Entities in GladMMO.
 	/// </summary>
 	/// <typeparam name="TActorStateType"></typeparam>
-	public abstract class BaseEntityActor<TActorStateType> : ReceiveActor, IEntityActor, IEntityActorStateInitializable<TActorStateType>
+	public abstract class BaseEntityActor<TActorStateType> : ReceiveActor, IEntityActorStateInitializable<TActorStateType>
 		where TActorStateType : class
 	{
 		/// <summary>

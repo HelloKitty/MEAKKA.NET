@@ -32,7 +32,7 @@ namespace Booma
 	/// </summary>
 	/// <typeparam name="TActorType">The actor type.</typeparam>
 	public interface IActorFactory<out TActorType> : IFactoryCreatable<IActorRef, ActorCreationContext>
-		where TActorType : IEntityActor
+		where TActorType : IInternalActor
 	{
 
 	}
