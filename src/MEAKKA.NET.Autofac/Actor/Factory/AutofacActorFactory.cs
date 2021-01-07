@@ -44,7 +44,10 @@ namespace MEAKKA
 			Props props = new AutoFacDependencyResolver(lifetimeScope, System)
 				.Create<TActorType>();
 
-			IActorRef actorRef = context.ActorReferenceFactory.ActorOf(props, typeof(TActorType).Name);
+			//We cannot use type name, because it's not unique for Actor name
+			//I also don't have a good way to seed in unique identifiers.
+			//We must rely on Akka to produce a unique key.
+			IActorRef actorRef = context.ActorReferenceFactory.ActorOf(props);
 
 			if(actorRef.IsNobody())
 				throw new InvalidOperationException($"Failed to create Actor: {typeof(TActorType).Name}. Path: {actorRef.Path}");
