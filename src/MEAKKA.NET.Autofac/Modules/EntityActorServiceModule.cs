@@ -17,7 +17,7 @@ namespace MEAKKA
 	/// It also registers the <typeparamref name="TEntityActorType"/> as well as
 	/// the <see cref="IMessageHandlerService{TMessageType,TMessageContext}"/> for the actor.
 	/// </summary>
-	public sealed class EntityActorServiceModule<TEntityActorType> : Autofac.Module 
+	public class EntityActorServiceModule<TEntityActorType> : Autofac.Module 
 		where TEntityActorType : ActorBase, IDisposableAttachable
 	{
 		protected override void Load(ContainerBuilder builder)
@@ -69,9 +69,7 @@ namespace MEAKKA
 				.Named<IMessageHandlerService<EntityActorMessage, EntityActorMessageContext>>(typeof(TActorType).Name)
 				.InstancePerLifetimeScope();
 
-			foreach(var handler in GetType()
-				.Assembly
-				.GetTypes()
+			foreach(var handler in GetSearchableTypes<TActorType>()
 				.Where(t => t.IsAssignableTo<IMessageHandler<EntityActorMessage, EntityActorMessageContext>>())
 				.Where(t => t.GetCustomAttribute<ActorMessageHandlerAttribute>()?.ActorType == typeof(TActorType)))
 			{
@@ -80,6 +78,23 @@ namespace MEAKKA
 					.Named<IMessageHandler<EntityActorMessage, EntityActorMessageContext>>(typeof(TActorType).Name)
 					.InstancePerLifetimeScope();
 			}
+		}
+
+		/// <summary>
+		/// Implementer should a collection of types to be searched
+		/// for <see cref="IMessageHandler{TMessageType,TMessageContext}"/>s.
+		/// Can be any collection of types, they will be filtered.
+		///
+		/// Default will search the assembly the <typeparamref name="TEntityActorType"/> is contained in.
+		/// </summary>
+		/// <typeparam name="TActorType">The actor type.</typeparam>
+		/// <returns></returns>
+		protected virtual IEnumerable<Type> GetSearchableTypes<TActorType>() 
+			where TActorType : ActorBase, IDisposableAttachable
+		{
+			return typeof(TActorType)
+				.Assembly
+				.GetTypes();
 		}
 	}
 }
