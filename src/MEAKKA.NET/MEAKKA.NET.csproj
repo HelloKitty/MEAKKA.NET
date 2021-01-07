@@ -25,6 +25,7 @@
     <PackageReference Include="Common.Logging" Version="3.4.1" />
     <PackageReference Include="Glader.Essentials.Common" Version="2.2.49" />
     <PackageReference Include="Glader.Essentials.MessageHandler" Version="2.2.49" />
+    <PackageReference Include="Glader.Essentials.Models" Version="2.2.49" />
   </ItemGroup>
 
   <ItemGroup>
