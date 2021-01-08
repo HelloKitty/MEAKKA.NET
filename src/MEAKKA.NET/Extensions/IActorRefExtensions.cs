@@ -87,5 +87,18 @@ namespace MEAKKA
 
 			actorReference.Tell((object)new TMessageType(), actorReference);
 		}
+
+		/// <summary>
+		/// Call's <see cref="IActorRef"/>.Tell which will send a <see cref="InitializeStateMessage{T}"/>
+		/// containing the provided <see cref="state"/> value.
+		/// </summary>
+		/// <param name="actorReference">Actor to initialize state for.</param>
+		/// <param name="state">The state value to initialize.</param>
+		public static void InitializeState<T>(this IActorRef actorReference, T state)
+		{
+			if(actorReference == null) throw new ArgumentNullException(nameof(actorReference));
+
+			actorReference.Tell(new InitializeStateMessage<T>(state));
+		}
 	}
 }
