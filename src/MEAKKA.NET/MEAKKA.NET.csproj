@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/HelloKitty/MEAKKA.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>ME AKKA MEAKKA MEAKKA.NET</PackageTags>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

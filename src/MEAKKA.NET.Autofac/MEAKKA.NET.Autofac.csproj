@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/HelloKitty/MEAKKA.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>ME AKKA MEAKKA MEAKKA.NET Autofac</PackageTags>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
