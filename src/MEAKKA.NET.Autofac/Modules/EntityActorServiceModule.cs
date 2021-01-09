@@ -77,7 +77,27 @@ namespace MEAKKA
 				builder.RegisterType(handler)
 					.Named<IMessageHandler<EntityActorMessage, EntityActorMessageContext>>(typeof(TActorType).Name)
 					.InstancePerLifetimeScope();
+
+				//Now we parse the handler to find any IActorState properties we can register handlers for.
+				foreach (var prop in handler.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+				{
+					//This checks if a handler's fields are an actor state type
+					//and if they are we'll auto-generate and register a state initializer handler for it
+					//so it can be externally initialized.
+					if (IsActorStateProperty<TActorType>(prop))
+					{
+						builder.RegisterType(typeof(InitializeStateMessageHandler<>).MakeGenericType(prop.PropertyType.GenericTypeArguments.First()))
+							.Named<IMessageHandler<EntityActorMessage, EntityActorMessageContext>>(typeof(TActorType).Name)
+							.InstancePerLifetimeScope();
+					}
+				}
 			}
+		}
+
+		private static bool IsActorStateProperty<TActorType>(PropertyInfo prop) 
+			where TActorType : ActorBase, IDisposableAttachable
+		{
+			return prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IActorState<>) || prop.PropertyType.GetGenericTypeDefinition() == typeof(IMutableActorState<>);
 		}
 
 		/// <summary>
