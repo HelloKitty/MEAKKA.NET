@@ -33,7 +33,7 @@ namespace MEAKKA
 		}
 
 		/// <inheritdoc />
-		public virtual IActorRef Create(ActorCreationContext context)
+		public virtual IEntityActorRef<TActorType> Create(ActorCreationContext context)
 		{
 			if (context == null) throw new ArgumentNullException(nameof(context));
 
@@ -52,7 +52,8 @@ namespace MEAKKA
 			if(actorRef.IsNobody())
 				throw new InvalidOperationException($"Failed to create Actor: {typeof(TActorType).Name}. Path: {actorRef.Path}");
 
-			return actorRef;
+			//We adapt this to the type-containing actor type interface.
+			return new EntityActorGenericAdapter<TActorType>(actorRef);
 		}
 	}
 }

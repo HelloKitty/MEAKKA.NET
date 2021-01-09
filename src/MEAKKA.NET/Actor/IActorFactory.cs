@@ -31,7 +31,7 @@ namespace Booma
 	/// Returning <see cref="IActorRef"/> from creation context <see cref="ActorCreationContext"/>.
 	/// </summary>
 	/// <typeparam name="TActorType">The actor type.</typeparam>
-	public interface IActorFactory<out TActorType> : IFactoryCreatable<IActorRef, ActorCreationContext>
+	public interface IActorFactory<out TActorType> : IFactoryCreatable<IEntityActorRef<TActorType>, ActorCreationContext>
 		where TActorType : IInternalActor
 	{
 

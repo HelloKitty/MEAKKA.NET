@@ -25,7 +25,7 @@ namespace MEAKKA
 	/// Entity Actor Type <typeparamref name="TActorType"/>.
 	/// </summary>
 	/// <typeparam name="TActorType"></typeparam>
-	public interface IEntityActorRef<TActorType> : IEntityActorRef
+	public interface IEntityActorRef<out TActorType> : IEntityActorRef
 		where TActorType : IInternalActor
 	{
 		
