@@ -19,11 +19,13 @@ namespace MEAKKA
 		/// </summary>
 		protected IMutableActorState<T> MutableStateContainer { get; }
 
-		protected InitializeStateMessageHandler(IMutableActorState<T> mutableStateContainer)
+		/// <inheritdoc />
+		public InitializeStateMessageHandler(IMutableActorState<T> mutableStateContainer)
 		{
 			MutableStateContainer = mutableStateContainer ?? throw new ArgumentNullException(nameof(mutableStateContainer));
 		}
 
+		/// <inheritdoc />
 		public override Task HandleMessageAsync(EntityActorMessageContext context, InitializeStateMessage<T> message, CancellationToken token = default)
 		{
 			//Just initialize the state container.
