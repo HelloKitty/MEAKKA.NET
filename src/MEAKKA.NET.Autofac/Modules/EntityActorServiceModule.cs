@@ -97,7 +97,7 @@ namespace MEAKKA
 		private static bool IsActorStateProperty<TActorType>(PropertyInfo prop) 
 			where TActorType : ActorBase, IDisposableAttachable
 		{
-			return prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IActorState<>) || prop.PropertyType.GetGenericTypeDefinition() == typeof(IMutableActorState<>);
+			return prop.PropertyType.IsGenericType && (prop.PropertyType.GetGenericTypeDefinition() == typeof(IActorState<>) || prop.PropertyType.GetGenericTypeDefinition() == typeof(IMutableActorState<>));
 		}
 
 		/// <summary>
