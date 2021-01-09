@@ -8,7 +8,7 @@ namespace MEAKKA
 	/// Simple generic mutable <see cref="IActorState{T}"/> implementation.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public sealed class MutableGenericActorState<T> : IActorState<T>, IMutableActorState<T>
+	public sealed class MutableGenericActorState<T> : IActorState<T>, IMutableActorState<T>, IInternalActorState<T>, IInternalMutableActorState<T>
 	{
 		/// <inheritdoc />
 		public T Data { get; set; }
