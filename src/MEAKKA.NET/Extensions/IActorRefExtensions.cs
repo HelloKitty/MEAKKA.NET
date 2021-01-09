@@ -14,7 +14,7 @@ namespace MEAKKA
 		/// </summary>
 		/// <param name="actorReference"></param>
 		/// <param name="message"></param>
-		public static void Tell(this IActorRef actorReference, EntityActorMessage message)
+		public static void TellEntity(this IActorRef actorReference, EntityActorMessage message)
 		{
 			if (actorReference == null) throw new ArgumentNullException(nameof(actorReference));
 			if (message == null) throw new ArgumentNullException(nameof(message));
@@ -28,7 +28,7 @@ namespace MEAKKA
 		/// <param name="actorReference"></param>
 		/// <param name="message"></param>
 		/// <param name="sender"></param>
-		public static void Tell(this IActorRef actorReference, EntityActorMessage message, IActorRef sender)
+		public static void TellEntity(this IActorRef actorReference, EntityActorMessage message, IActorRef sender)
 		{
 			if(actorReference == null) throw new ArgumentNullException(nameof(actorReference));
 			if(message == null) throw new ArgumentNullException(nameof(message));
@@ -55,7 +55,7 @@ namespace MEAKKA
 		/// See Akka.NET's <see cref="IActorRef"/>.Tell.
 		/// </summary>
 		/// <param name="actorReference"></param>
-		public static void Tell<TMessageType>(this IActorRef actorReference)
+		public static void TellEntity<TMessageType>(this IActorRef actorReference)
 			where TMessageType : EntityActorMessage, new()
 		{
 			if(actorReference == null) throw new ArgumentNullException(nameof(actorReference));
@@ -68,7 +68,7 @@ namespace MEAKKA
 		/// </summary>
 		/// <param name="actorReference"></param>
 		/// <param name="sender"></param>
-		public static void Tell<TMessageType>(this IActorRef actorReference, IActorRef sender)
+		public static void TellEntity<TMessageType>(this IActorRef actorReference, IActorRef sender)
 			where TMessageType : EntityActorMessage, new()
 		{
 			if(actorReference == null) throw new ArgumentNullException(nameof(actorReference));
