@@ -8,12 +8,9 @@ using Akka.Util;
 namespace MEAKKA
 {
 	/// <summary>
-	/// Type-safe <see cref="IActorRef"/> references to a specified
-	/// Entity Actor Type <typeparamref name="TActorType"/>.
+	/// Do not directly reference this interface in any external code!
 	/// </summary>
-	/// <typeparam name="TActorType"></typeparam>
-	public interface IEntityActorRef<TActorType>
-		where TActorType : IInternalActor
+	public interface IEntityActorRef
 	{
 		//The reason we no longer use an adapter style is AKKA.NET does some hacky type introspection
 		//which breaks if we adapt the actor ref.
@@ -21,6 +18,17 @@ namespace MEAKKA
 		/// Adapted actor reference.
 		/// </summary>
 		IActorRef Actor { get; }
+	}
+
+	/// <summary>
+	/// Type-safe <see cref="IActorRef"/> references to a specified
+	/// Entity Actor Type <typeparamref name="TActorType"/>.
+	/// </summary>
+	/// <typeparam name="TActorType"></typeparam>
+	public interface IEntityActorRef<TActorType> : IEntityActorRef
+		where TActorType : IInternalActor
+	{
+		
 	}
 
 	/// <summary>
