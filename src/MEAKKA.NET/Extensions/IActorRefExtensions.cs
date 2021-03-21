@@ -107,14 +107,12 @@ namespace MEAKKA
 		/// Sends the specified <see cref="actorReference"/> a request message that implements <see cref="IActorRequestMessage{TResponseMessageType}"/>.
 		/// Will async await upon a response of Type <typeparamref name="TResponseType"/>.
 		/// </summary>
-		/// <typeparam name="TRequestMessage">The request message to send async.</typeparam>
 		/// <typeparam name="TResponseType">The response message type.</typeparam>
 		/// <param name="actorReference">Actor target.</param>
 		/// <param name="message">The message to send.</param>
 		/// <param name="token">Cancel token.</param>
 		/// <returns>The response.</returns>
-		public static async Task<TResponseType> RequestAsync<TRequestMessage, TResponseType>(this IActorRef actorReference, TRequestMessage message, CancellationToken token = default)
-			where TRequestMessage : IActorRequestMessage<TResponseType>
+		public static async Task<TResponseType> RequestAsync<TResponseType>(this IActorRef actorReference, IActorRequestMessage<TResponseType> message, CancellationToken token = default)
 		{
 			if (actorReference == null) throw new ArgumentNullException(nameof(actorReference));
 
