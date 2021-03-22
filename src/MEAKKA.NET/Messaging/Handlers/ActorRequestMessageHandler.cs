@@ -13,7 +13,7 @@ namespace MEAKKA
 	/// <typeparam name="TMessageRequestType">The request message type.</typeparam>
 	/// <typeparam name="TMessageResponseType">Response message type.</typeparam>
 	public abstract class ActorRequestMessageHandler<TMessageRequestType, TMessageResponseType> : BaseActorMessageHandler<TMessageRequestType>
-		where TMessageRequestType : EntityActorMessage
+		where TMessageRequestType : EntityActorMessage, IActorRequestMessage<TMessageResponseType>
 	{
 		/// <summary>
 		/// Request/response message handler.
