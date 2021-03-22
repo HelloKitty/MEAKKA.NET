@@ -71,7 +71,7 @@ namespace MEAKKA
 
 			foreach(var handler in GetSearchableTypes<TActorType>()
 				.Where(t => t.IsAssignableTo<IMessageHandler<EntityActorMessage, EntityActorMessageContext>>())
-				.Where(t => t.GetCustomAttribute<ActorMessageHandlerAttribute>()?.ActorType == typeof(TActorType)))
+				.Where(t => t.GetCustomAttributes<ActorMessageHandlerAttribute>().Any(a => a.ActorType == typeof(TActorType))))
 			{
 				//No longer sharing handlers anymore.
 				builder.RegisterType(handler)
