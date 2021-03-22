@@ -12,7 +12,7 @@ namespace MEAKKA
 	/// Marks a <see cref="IMessageHandler{TMessageType,TMessageContext}"/> as usable
 	/// by a specific Entity type.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public sealed class ActorMessageHandlerAttribute : Attribute
 	{
 		/// <summary>
