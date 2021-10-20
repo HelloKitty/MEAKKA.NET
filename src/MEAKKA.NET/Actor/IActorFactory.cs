@@ -6,7 +6,7 @@ using Akka.DI.Core;
 using Glader.Essentials;
 using MEAKKA;
 
-namespace Booma
+namespace MEAKKA
 {
 	/// <summary>
 	/// Basic creation context for an actor.

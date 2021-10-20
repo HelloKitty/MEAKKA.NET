@@ -5,7 +5,6 @@ using Akka.Actor;
 using Akka.DI.AutoFac;
 using Akka.DI.Core;
 using Autofac;
-using Booma;
 
 namespace MEAKKA
 {
