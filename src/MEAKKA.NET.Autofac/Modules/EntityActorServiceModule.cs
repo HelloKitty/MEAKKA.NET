@@ -19,15 +19,16 @@ namespace MEAKKA
 	public class EntityActorServiceModule<TEntityActorType> : Autofac.Module 
 		where TEntityActorType : ActorBase, IDisposableAttachable
 	{
+		/// <inheritdoc />
 		protected override void Load(ContainerBuilder builder)
 		{
 			base.Load(builder);
 
 			//Prevent this from running multiple times.
-			if(builder.Properties.ContainsKey(GetType().AssemblyQualifiedName))
+			if(builder.Properties.ContainsKey($"{nameof(EntityActorServiceModule<TEntityActorType>)}_{typeof(TEntityActorType).Name}"))
 				return;
 
-			builder.Properties.Add(GetType().AssemblyQualifiedName, null);
+			builder.Properties.Add($"{nameof(EntityActorServiceModule<TEntityActorType>)}_{typeof(TEntityActorType).Name}", null);
 
 			//Default MEAKKA autofac module.
 			builder.RegisterModule<AutofacMEAKKAServiceModule>();
