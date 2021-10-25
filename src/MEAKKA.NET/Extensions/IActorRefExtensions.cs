@@ -104,6 +104,20 @@ namespace MEAKKA
 		}
 
 		/// <summary>
+		/// Call's <see cref="IActorRef"/>.Tell which will send a <see cref="EntityActorStateInitializeMessage{T}"/>
+		/// containing the provided <see cref="state"/> value.
+		/// </summary>
+		/// <param name="actorReference">Actor to initialize.</param>
+		/// <param name="state">The state value to initialize.</param>
+		public static void InitializeActor<T>(this IActorRef actorReference, T state) 
+			where T : class
+		{
+			if(actorReference == null) throw new ArgumentNullException(nameof(actorReference));
+
+			actorReference.Tell(new EntityActorStateInitializeMessage<T>(state));
+		}
+
+		/// <summary>
 		/// Sends the specified <see cref="actorReference"/> a request message that implements <see cref="IActorRequestMessage{TResponseMessageType}"/>.
 		/// Will async await upon a response of Type <typeparamref name="TResponseType"/>.
 		/// </summary>
