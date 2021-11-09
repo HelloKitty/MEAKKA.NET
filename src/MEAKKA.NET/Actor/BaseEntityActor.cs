@@ -88,7 +88,7 @@ namespace MEAKKA
 						else
 						{
 							if(Logger.IsWarnEnabled)
-								Logger.Warn($"{GetType().Name} encountered MessageType: {message.GetType().Name} before INITIALIZATION.");
+								Logger.Warn($"{GetType().GetFriendlyName()} encountered MessageType: {message.GetType().GetFriendlyName()} before INITIALIZATION.");
 						}
 
 						//Even if we're initialized now, it's an init message we shouldn't continue with.
@@ -105,12 +105,12 @@ namespace MEAKKA
 			{
 				if(!await HandleMessageAsync(message, context))
 					if(Logger.IsWarnEnabled)
-						Logger.Warn($"EntityActor encountered unhandled MessageType: {message.GetType().Name}");
+						Logger.Warn($"EntityActor encountered unhandled MessageType: {message.GetType().GetFriendlyName()}");
 			}
 			catch(Exception e)
 			{
 				if(Logger.IsErrorEnabled)
-					Logger.Error($"Actor: {Self.Path.Address} failed to handle MessageType: {message.GetType().Name} without Exception: {e.Message}\n\nStack: {e.StackTrace}");
+					Logger.Error($"Actor: {Self.Path.Address} failed to handle MessageType: {message.GetType().GetFriendlyName()} without Exception: {e.Message}\n\nStack: {e.StackTrace}");
 				throw;
 			}
 		}
@@ -162,7 +162,7 @@ namespace MEAKKA
 			lock (SyncObj)
 			{
 				if(isInitialized)
-					throw new InvalidOperationException($"Cannot initialize actor: {GetType().Name} more than once.");
+					throw new InvalidOperationException($"Cannot initialize actor: {GetType().GetFriendlyName()} more than once.");
 
 				ActorState = state;
 				isInitialized = true;
@@ -178,7 +178,7 @@ namespace MEAKKA
 			return new OneForOneStrategy(0, -1, exception =>
 			{
 				if(Logger.IsErrorEnabled)
-					Logger.Error($"{GetType().Name} Exception ACTOR STOP: {exception.Message}\n\nStack: {exception.StackTrace}");
+					Logger.Error($"{GetType().GetFriendlyName()} Exception ACTOR STOP: {exception.Message}\n\nStack: {exception.StackTrace}");
 
 				return Directive.Stop;
 			});
@@ -210,7 +210,7 @@ namespace MEAKKA
 			lock(SyncObj)
 			{
 				if(isDisposed)
-					throw new ObjectDisposedException($"Cannot attach {disposable.GetType().Name} as an attached disposable if the session is already disposed.");
+					throw new ObjectDisposedException($"Cannot attach {disposable.GetType().GetFriendlyName()} as an attached disposable if the session is already disposed.");
 
 				InternalDisposables.Add(disposable);
 			}
@@ -239,7 +239,7 @@ namespace MEAKKA
 						catch (Exception e)
 						{
 							if (Logger.IsErrorEnabled)
-								Logger.Error($"Failed to Dispose of Actor Owned Resource: {disposable?.GetType()?.Name} Error: {e}");
+								Logger.Error($"Failed to Dispose of Actor Owned Resource: {disposable?.GetType()?.GetFriendlyName()} Error: {e}");
 
 							optionalException = e;
 						}
