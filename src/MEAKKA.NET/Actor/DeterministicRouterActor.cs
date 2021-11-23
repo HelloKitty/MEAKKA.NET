@@ -62,6 +62,10 @@ namespace MEAKKA
 				case Terminated terminated:
 					RemoveRoutee(terminated.ActorRef);
 					break;
+				case BroadcastTargeted broadcast:
+					if (Routees.Contains(broadcast.Target))
+						broadcast.Target.Forward(broadcast.Message);
+					break;
 				case Broadcast broadcast:
 					foreach (var routee in Routees)
 						routee.Forward(broadcast.Message);
