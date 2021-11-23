@@ -52,6 +52,12 @@ namespace MEAKKA
 		}
 
 		/// <inheritdoc />
+		public void SendTo(TActorGroupType @group, EntityActorMessage message, IActorRef target, IActorRef sender)
+		{
+			throw new NotSupportedException($"{nameof(DefaultGenericActorMessageBroadcaster<TActorGroupType>)} does not support {nameof(SendTo)}");
+		}
+
+		/// <inheritdoc />
 		public void RemoveFromGroup(TActorGroupType group, IActorRef actor)
 		{
 			if (@group == null) throw new ArgumentNullException(nameof(@group));

@@ -51,6 +51,15 @@ namespace MEAKKA
 		}
 
 		/// <inheritdoc />
+		public void SendTo(TActorGroupType @group, EntityActorMessage message, IActorRef target, IActorRef sender)
+		{
+			if(@group == null) throw new ArgumentNullException(nameof(@group));
+			if(target == null) throw new ArgumentNullException(nameof(target));
+
+			EnsureBroadcastGroupExists(group).Tell(new BroadcastTargeted(message, target), sender);
+		}
+
+		/// <inheritdoc />
 		public void RemoveFromGroup(TActorGroupType group, IActorRef actor)
 		{
 			if (@group == null) throw new ArgumentNullException(nameof(@group));

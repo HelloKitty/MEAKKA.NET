@@ -34,6 +34,17 @@ namespace MEAKKA
 		/// <param name="actor">The actor to add to the group.</param>
 		void AddToGroup(TActorGroupType group, IActorRef actor);
 
+
+		/// <summary>
+		/// Sends a <see cref="message"/> to the specified actor.
+		/// Unlike broadcasting this will be a 1:1 messaging.
+		/// </summary>
+		/// <param name="group">The group to send to.</param>
+		/// <param name="message">The message to send.</param>
+		/// <param name="target">The target of the message.</param>
+		/// <param name="sender">Sender of the message.</param>
+		void SendTo(TActorGroupType group, EntityActorMessage message, IActorRef target, IActorRef sender);
+
 		/// <summary>
 		/// Removes the specified actor to the specified group.
 		/// </summary>
